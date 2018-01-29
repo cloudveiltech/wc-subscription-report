@@ -1,0 +1,59 @@
+
+.cv-r{
+    width: 100%;
+    background-color: #fff;
+    border: 1px solid #eee;
+    border-spacing: 0;    
+}
+.cv-r-col-status{
+    width: 15%;
+}
+.cv-r-col-name{
+    width: 70%;
+}
+.cv-r-col-qty{
+    width: 15%;
+}
+.cv-r thead th{
+    border-bottom: 1px solid #eee;
+    line-height: 2em;
+    font-size: 14px;
+    text-align: left;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+.cv-r tbody td{    
+    line-height: 1.5em;
+    font-size: 13px;
+    text-align: left;    
+    border-bottom: 1px solid #eee;
+}
+.cv-r-status{
+    padding-left: 15px;
+    padding-right: 15px;
+}
+.cv-r tbody td.cv-r-error{
+    line-height: 2em;
+    font-size: 14px;
+    text-align: center;
+}
+.cv-r-name{
+    width: 100%;  
+    border-spacing: 0;    
+}
+.cv-r-name tbody td{
+    padding: 0;    
+    border-bottom: none;
+}
+.cv-r-name .cv-prod{
+    width: 80%;
+    padding-left: 15px;
+}
+.cv-r-name .cv-qte{
+    width: 20%;
+    text-align: right;
+    padding-right: 15px;
+}
+.cv-r-name tbody tr:nth-child(even) {
+    background-color: rgba(94,120,192,0.35);
+}
