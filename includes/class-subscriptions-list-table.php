@@ -97,7 +97,7 @@ class CV_Subscriptions_List_Table extends WP_List_Table {
     }
 
    
-    function get_data() {        
+    static function get_data() {
         global $wpdb;
         $table_data = $wpdb->get_results("        
                 SELECT  subscription_line_items.subscription_id, 
@@ -116,26 +116,26 @@ class CV_Subscriptions_List_Table extends WP_List_Table {
                         subscription_meta.billing_last_name,
                         subscription_meta.schedule_next_payment,
                         completed.completed_date
-                FROM wp_posts AS product 
+                FROM " . $wpdb->prefix . "posts AS product 
 
                 LEFT JOIN ( 
                         SELECT tr.object_id AS product_id, t.slug AS product_type 
-                        FROM wp_term_relationships AS tr 
-                        INNER JOIN wp_term_taxonomy AS x 
+                        FROM " . $wpdb->prefix . "term_relationships AS tr 
+                        INNER JOIN " . $wpdb->prefix . "term_taxonomy AS x 
                         ON ( x.taxonomy = 'product_type' AND x.term_taxonomy_id = tr.term_taxonomy_id ) 
-                        INNER JOIN wp_terms AS t 
+                        INNER JOIN " . $wpdb->prefix . "terms AS t 
                         ON t.term_id = x.term_id 
                 ) AS mo ON product.id = mo.product_id 
 
                 LEFT JOIN ( 
                         SELECT wcoitems.order_id AS subscription_id, wcoimeta.meta_value AS product_id,
                         wcoimeta.order_item_id, wcoimeta2.meta_value AS product_total, wcoimeta3.meta_value AS qty 
-                        FROM wp_woocommerce_order_items AS wcoitems 
-                        INNER JOIN wp_woocommerce_order_itemmeta AS wcoimeta 
+                        FROM " . $wpdb->prefix . "woocommerce_order_items AS wcoitems 
+                        INNER JOIN " . $wpdb->prefix . "woocommerce_order_itemmeta AS wcoimeta 
                         ON wcoimeta.order_item_id = wcoitems.order_item_id 
-                        INNER JOIN wp_woocommerce_order_itemmeta AS wcoimeta2 
+                        INNER JOIN " . $wpdb->prefix . "woocommerce_order_itemmeta AS wcoimeta2 
                         ON wcoimeta2.order_item_id = wcoitems.order_item_id 
-                        INNER JOIN wp_woocommerce_order_itemmeta AS wcoimeta3 
+                        INNER JOIN " . $wpdb->prefix . "woocommerce_order_itemmeta AS wcoimeta3 
                         ON wcoimeta3.order_item_id = wcoitems.order_item_id 
                         WHERE wcoitems.order_item_type = 'line_item' 
                         AND wcoimeta.meta_key = '_product_id' 
@@ -144,67 +144,67 @@ class CV_Subscriptions_List_Table extends WP_List_Table {
                 ) AS subscription_line_items ON product.id = subscription_line_items.product_id 
 
                 LEFT JOIN (
-                        SELECT DISTINCT(wp_postmeta.post_id) AS wppm_id, 
-                        wp_postmeta.meta_value AS currency, 
-                        wp_postmeta1.meta_value AS billing_period, 
-                        wp_postmeta2.meta_value AS billing_interval, 
-                        wp_postmeta3.meta_value AS customer_id,
-                        wp_postmeta4.meta_value AS billing_first_name,
-                        wp_postmeta5.meta_value AS billing_last_name,
-                        /*wp_postmeta6.meta_value AS billing_company,
-                        wp_postmeta7.meta_value AS billing_address,*/
-                        wp_postmeta8.meta_value AS schedule_next_payment/*,
-                        wp_postmeta9.meta_value AS schedule_cancelled,
-                        wp_postmeta10.meta_value AS schedule_end,
-                        wp_postmeta11.meta_value AS paid_date,
-                        wp_postmeta12.meta_value as completed_date */
-                        FROM wp_postmeta
-                        INNER JOIN wp_postmeta AS wp_postmeta1
-                        ON wp_postmeta1.post_id = wp_postmeta.post_id 
-                        INNER JOIN wp_postmeta AS wp_postmeta2 
-                        ON wp_postmeta2.post_id = wp_postmeta.post_id 
-                        INNER JOIN wp_postmeta AS wp_postmeta3 
-                        ON wp_postmeta3.post_id = wp_postmeta.post_id 
-                        INNER JOIN wp_postmeta AS wp_postmeta4 
-                        ON wp_postmeta4.post_id = wp_postmeta.post_id 
-                        INNER JOIN wp_postmeta AS wp_postmeta5 
-                        ON wp_postmeta5.post_id = wp_postmeta.post_id 
-                        /*INNER JOIN wp_postmeta AS wp_postmeta6 
-                        ON wp_postmeta6.post_id = wp_postmeta.post_id 
-                        INNER JOIN wp_postmeta AS wp_postmeta7 
-                        ON wp_postmeta7.post_id = wp_postmeta.post_id*/
-                        INNER JOIN wp_postmeta AS wp_postmeta8 
-                        ON wp_postmeta8.post_id = wp_postmeta.post_id 
-                        /*INNER JOIN wp_postmeta AS wp_postmeta9 
-                        ON wp_postmeta9.post_id = wp_postmeta.post_id
-                        INNER JOIN wp_postmeta AS wp_postmeta10 
-                        ON wp_postmeta10.post_id = wp_postmeta.post_id 
-                        /*INNER JOIN wp_postmeta AS wp_postmeta11
-                        ON wp_postmeta11.post_id = wp_postmeta.post_id 
-                        INNER JOIN wp_postmeta AS wp_postmeta12
-                        ON wp_postmeta12.post_id = wp_postmeta.post_id */
-                        WHERE wp_postmeta.meta_key = '_order_currency' 
-                        AND wp_postmeta1.meta_key = '_billing_period' 
-                        AND wp_postmeta2.meta_key = '_billing_interval'
-                        AND wp_postmeta3.meta_key = '_customer_user'
-                        AND wp_postmeta4.meta_key = '_billing_first_name'
-                        AND wp_postmeta5.meta_key = '_billing_last_name'
-                        /*AND wp_postmeta6.meta_key = '_billing_company'
-                        AND wp_postmeta7.meta_key = '_billing_address_index'*/
-                        AND wp_postmeta8.meta_key = '_schedule_next_payment'
-                        /*AND wp_postmeta9.meta_key = '_schedule_cancelled'
-                        AND wp_postmeta10.meta_key = '_schedule_end'
-                        AND wp_postmeta11.meta_key = '_paid_date'
-                        AND wp_postmeta12.meta_key = '_completed_date'*/
+                        SELECT DISTINCT(" . $wpdb->prefix . "postmeta.post_id) AS wppm_id, 
+                        " . $wpdb->prefix . "postmeta.meta_value AS currency, 
+                        " . $wpdb->prefix . "postmeta1.meta_value AS billing_period, 
+                        " . $wpdb->prefix . "postmeta2.meta_value AS billing_interval, 
+                        " . $wpdb->prefix . "postmeta3.meta_value AS customer_id,
+                        " . $wpdb->prefix . "postmeta4.meta_value AS billing_first_name,
+                        " . $wpdb->prefix . "postmeta5.meta_value AS billing_last_name,
+                        /*" . $wpdb->prefix . "postmeta6.meta_value AS billing_company,
+                        " . $wpdb->prefix . "postmeta7.meta_value AS billing_address,*/
+                        " . $wpdb->prefix . "postmeta8.meta_value AS schedule_next_payment/*,
+                        " . $wpdb->prefix . "postmeta9.meta_value AS schedule_cancelled,
+                        " . $wpdb->prefix . "postmeta10.meta_value AS schedule_end,
+                        " . $wpdb->prefix . "postmeta11.meta_value AS paid_date,
+                        " . $wpdb->prefix . "postmeta12.meta_value as completed_date */
+                        FROM " . $wpdb->prefix . "postmeta
+                        INNER JOIN " . $wpdb->prefix . "postmeta AS " . $wpdb->prefix . "postmeta1
+                        ON " . $wpdb->prefix . "postmeta1.post_id = " . $wpdb->prefix . "postmeta.post_id 
+                        INNER JOIN " . $wpdb->prefix . "postmeta AS " . $wpdb->prefix . "postmeta2 
+                        ON " . $wpdb->prefix . "postmeta2.post_id = " . $wpdb->prefix . "postmeta.post_id 
+                        INNER JOIN " . $wpdb->prefix . "postmeta AS " . $wpdb->prefix . "postmeta3 
+                        ON " . $wpdb->prefix . "postmeta3.post_id = " . $wpdb->prefix . "postmeta.post_id 
+                        INNER JOIN " . $wpdb->prefix . "postmeta AS " . $wpdb->prefix . "postmeta4 
+                        ON " . $wpdb->prefix . "postmeta4.post_id = " . $wpdb->prefix . "postmeta.post_id 
+                        INNER JOIN " . $wpdb->prefix . "postmeta AS " . $wpdb->prefix . "postmeta5 
+                        ON " . $wpdb->prefix . "postmeta5.post_id = " . $wpdb->prefix . "postmeta.post_id 
+                        /*INNER JOIN " . $wpdb->prefix . "postmeta AS " . $wpdb->prefix . "postmeta6 
+                        ON " . $wpdb->prefix . "postmeta6.post_id = " . $wpdb->prefix . "postmeta.post_id 
+                        INNER JOIN " . $wpdb->prefix . "postmeta AS " . $wpdb->prefix . "postmeta7 
+                        ON " . $wpdb->prefix . "postmeta7.post_id = " . $wpdb->prefix . "postmeta.post_id*/
+                        INNER JOIN " . $wpdb->prefix . "postmeta AS " . $wpdb->prefix . "postmeta8 
+                        ON " . $wpdb->prefix . "postmeta8.post_id = " . $wpdb->prefix . "postmeta.post_id 
+                        /*INNER JOIN " . $wpdb->prefix . "postmeta AS " . $wpdb->prefix . "postmeta9 
+                        ON " . $wpdb->prefix . "postmeta9.post_id = " . $wpdb->prefix . "postmeta.post_id
+                        INNER JOIN " . $wpdb->prefix . "postmeta AS " . $wpdb->prefix . "postmeta10 
+                        ON " . $wpdb->prefix . "postmeta10.post_id = " . $wpdb->prefix . "postmeta.post_id 
+                        /*INNER JOIN " . $wpdb->prefix . "postmeta AS " . $wpdb->prefix . "postmeta11
+                        ON " . $wpdb->prefix . "postmeta11.post_id = " . $wpdb->prefix . "postmeta.post_id 
+                        INNER JOIN " . $wpdb->prefix . "postmeta AS " . $wpdb->prefix . "postmeta12
+                        ON " . $wpdb->prefix . "postmeta12.post_id = " . $wpdb->prefix . "postmeta.post_id */
+                        WHERE " . $wpdb->prefix . "postmeta.meta_key = '_order_currency' 
+                        AND " . $wpdb->prefix . "postmeta1.meta_key = '_billing_period' 
+                        AND " . $wpdb->prefix . "postmeta2.meta_key = '_billing_interval'
+                        AND " . $wpdb->prefix . "postmeta3.meta_key = '_customer_user'
+                        AND " . $wpdb->prefix . "postmeta4.meta_key = '_billing_first_name'
+                        AND " . $wpdb->prefix . "postmeta5.meta_key = '_billing_last_name'
+                        /*AND " . $wpdb->prefix . "postmeta6.meta_key = '_billing_company'
+                        AND " . $wpdb->prefix . "postmeta7.meta_key = '_billing_address_index'*/
+                        AND " . $wpdb->prefix . "postmeta8.meta_key = '_schedule_next_payment'
+                        /*AND " . $wpdb->prefix . "postmeta9.meta_key = '_schedule_cancelled'
+                        AND " . $wpdb->prefix . "postmeta10.meta_key = '_schedule_end'
+                        AND " . $wpdb->prefix . "postmeta11.meta_key = '_paid_date'
+                        AND " . $wpdb->prefix . "postmeta12.meta_key = '_completed_date'*/
                 ) AS subscription_meta ON subscription_meta.wppm_id = subscription_line_items.subscription_id
 
-                LEFT JOIN wp_posts AS subscriptions ON subscriptions.ID = subscription_line_items.subscription_id 
+                LEFT JOIN " . $wpdb->prefix . "posts AS subscriptions ON subscriptions.ID = subscription_line_items.subscription_id 
 
                 LEFT JOIN (
-                SELECT DISTINCT(wp_postmeta.post_id) AS aadd_id, 
-                        wp_postmeta.meta_value AS completed_date
-                        FROM wp_postmeta                                                
-                        WHERE wp_postmeta.meta_key = '_completed_date' 
+                SELECT DISTINCT(" . $wpdb->prefix . "postmeta.post_id) AS aadd_id, 
+                        " . $wpdb->prefix . "postmeta.meta_value AS completed_date
+                        FROM " . $wpdb->prefix . "postmeta                                                
+                        WHERE " . $wpdb->prefix . "postmeta.meta_key = '_completed_date' 
                 ) AS completed ON completed.aadd_id = subscription_line_items.subscription_id
 
                 /*WHERE product.post_status = 'publish' */
