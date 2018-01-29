@@ -62,7 +62,7 @@ function cvsp_init() {
             ?>
             <div class="wrap">
                 <h2>Subscription products list</h2>
-                <?= add_csv_auload_btn('list') ?>                
+                <?php echo add_csv_auload_btn('list') ?>
                 <form method="post">
                     <input type="hidden" name="page" value="ttest_list_table">
                     <?php
@@ -80,7 +80,7 @@ function cvsp_init() {
         ?>
         <div class="wrap">
             <h2>Subscription Totals</h2>
-            <?= add_csv_auload_btn('total') ?>                
+            <?php echo add_csv_auload_btn('total') ?>
             <table  class="cv-r">
                 <thead>
                     <th class="cv-r-col-status">Subscriptions status</th>
@@ -97,15 +97,15 @@ function cvsp_init() {
                         foreach ($report_data as $sub_status=>$sub_row){
                             ?>
                             <tr>
-                                <td class="cv-r-status"><?= $sub_status ?></td>
+                                <td class="cv-r-status"><?php echo $sub_status ?></td>
                                 <td colspan="2">
                                     <table class="cv-r-name">
                                         <?php
                                             foreach ($sub_row as $prod_ID=>$prod_row){
                                         ?>
                                             <tr>
-                                                <td class="cv-prod"><?= $prod_row['product_name'] ?></td>
-                                                <td class="cv-qte"><?= $prod_row['sum_qty'] ?></td>
+                                                <td class="cv-prod"><?php echo $prod_row['product_name'] ?></td>
+                                                <td class="cv-qte"><?php echo $prod_row['sum_qty'] ?></td>
                                             </tr>
                                         <?php
                                             }
@@ -127,7 +127,7 @@ function cvsp_init() {
         ?>
                 <div style="margin: 5px 0; text-align: right;">
                     <form method="post">
-                        <input type="hidden" name="type_report" value="<?= $type ?>">
+                        <input type="hidden" name="type_report" value="<?php echo $type ?>">
                         <button class="button button-primary" type="submit" name="get_data" value="download_csv">Get data <b>.csv</b></button>
                     </form>                    
 		</div>
